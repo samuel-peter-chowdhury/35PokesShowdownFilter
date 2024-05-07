@@ -2,28 +2,26 @@ let allowedMap = new Map();
 
 // Function to fetch JSON data
 function fetchAllowedPokemonData() {
-    fetch('https:https://raw.githubusercontent.com/samuel-peter-chowdhury/35PokesShowdownFilter/main/dates/Current.json', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(item => {
-            allowedMap.set(item.name.toLowerCase(), true);
-        });
-    })
-    .catch(error => {
-        console.error('Error fetching allowed Pokemon data:', error);
-    });
+    const xhr = new XMLHttpRequest();
+    const date = new Date();
+    const fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + date.getUTCFullYear() + '_' + (date.getUTCMonth() + 1) + '.json';
+    console.log(fileName);
+    xhr.open('GET', fileName, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            const data = JSON.parse(xhr.responseText);
+            data.forEach(item => {
+                allowedMap.set(item.toLowerCase(), true);
+            });
+            console.log(allowedMap);
+        }
+    }
+    xhr.send();
 }
 
 // Call the function to fetch JSON data
 fetchAllowedPokemonData();
 
-// Rest of your code remains unchanged
 let removedElements = [];
 
 const observer = new MutationObserver(onMutation);
