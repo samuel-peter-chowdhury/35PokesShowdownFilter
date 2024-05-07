@@ -1,5 +1,29 @@
-const allowedMap = new Map([['carbink', true],  ['mantine', true],  ['dusknoir', true],  ['cryogonal', true],  ['milotic', true],  ['mr. mime', true],  ['hitmonchan', true],  ['shiinotic', true],  ['beheeyem', true],  ['drampa', true],  ['oinkologne-f', true],  ['dustox', true],  ['sunflora', true],  ['raichu-alola', true],  ['meowstic', true],  ['dachsbun', true],  ['calyrex', true],  ['arbok', true],  ['octillery', true],  ['maushold', true],  ['grafaiai', true],  ['torkoal', true],  ['miltank', true],  ['froslass', true],  ['ariados', true],  ['sableye', true],  ['cherrim', true],  ['simisear', true],  ['salazzle', true],  ['zoroark', true],  ['emolga', true],  ['wobbuffet', true],  ['klawf', true],  ['delcatty', true],  ['drakloak', true]]);
+let allowedMap = new Map();
 
+// Function to fetch JSON data
+function fetchAllowedPokemonData() {
+    fetch('https:https://raw.githubusercontent.com/samuel-peter-chowdhury/35PokesShowdownFilter/main/dates/Current.json', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(item => {
+            allowedMap.set(item.name.toLowerCase(), true);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching allowed Pokemon data:', error);
+    });
+}
+
+// Call the function to fetch JSON data
+fetchAllowedPokemonData();
+
+// Rest of your code remains unchanged
 let removedElements = [];
 
 const observer = new MutationObserver(onMutation);
