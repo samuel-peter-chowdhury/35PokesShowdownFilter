@@ -10,20 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
     toggleElement.addEventListener('change', function() {
-        if (this.checked) {
-            chrome.storage.local.set({ 'toggleState': this.checked }, function() {
-                chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-                    var activeTab = tabs[0];
-                    chrome.tabs.sendMessage(activeTab.id, {'message': 'filter_on'});
-                });
-            });
-        } else {
-            chrome.storage.local.set({ 'toggleState': this.checked }, function() {
-                chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-                    var activeTab = tabs[0];
-                    chrome.tabs.sendMessage(activeTab.id, {'message': 'filter_off'});
-                });
-            });
-        }
+        chrome.storage.local.set({ 'toggleState': this.checked }, function() {});
     });
 });

@@ -1,35 +1,16 @@
 const allowedMap = new Map([['carbink', true],  ['mantine', true],  ['dusknoir', true],  ['cryogonal', true],  ['milotic', true],  ['mr. mime', true],  ['hitmonchan', true],  ['shiinotic', true],  ['beheeyem', true],  ['drampa', true],  ['oinkologne-f', true],  ['dustox', true],  ['sunflora', true],  ['raichu-alola', true],  ['meowstic', true],  ['dachsbun', true],  ['calyrex', true],  ['arbok', true],  ['octillery', true],  ['maushold', true],  ['grafaiai', true],  ['torkoal', true],  ['miltank', true],  ['froslass', true],  ['ariados', true],  ['sableye', true],  ['cherrim', true],  ['simisear', true],  ['salazzle', true],  ['zoroark', true],  ['emolga', true],  ['wobbuffet', true],  ['klawf', true],  ['delcatty', true],  ['drakloak', true]]);
 
 let removedElements = [];
-let filterEnabled = false;
+
+const observer = new MutationObserver(onMutation);
 
 chrome.storage.local.get(['toggleState'], function(items) {
     if (items['toggleState']) {
-        filterEnabled = items['toggleState'];
+        observer.observe(document, {
+            childList: true,
+            subtree: true,
+        });
     }
-});
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.message === 'filter_on') {
-        console.log('filter_on');
-        const chart = document.querySelector('div.teambuilder-results');
-        filterChart(chart);
-    }
-    if (request.message === 'filter_off') {
-        console.log('filter_off');
-        if (removedElements.length > 0) {
-            removedElements.forEach(element => {
-                element.style.display = 'unset';
-            });
-            removedElements = [];
-        }
-    }
-});
-
-const observer = new MutationObserver(onMutation);
-observer.observe(document, {
-    childList: true,
-    subtree: true,
 });
 
 function onMutation(mutations) {
@@ -56,7 +37,7 @@ function onMutation(mutations) {
 }
 
 function filterChart(chart) {
-    if (filterEnabled && chart) {
+    if (chart) {
         console.log('Filtering Chart...');
         chart.scrollTop = chart.scrollHeight;
         setTimeout(function() {
