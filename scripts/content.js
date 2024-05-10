@@ -1,22 +1,24 @@
 let allowedMap = new Map();
 
 // Function to fetch JSON data
-function fetchAllowedPokemonData() {
-    const xhr = new XMLHttpRequest();
-    const date = new Date();
-    const fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + date.getUTCFullYear() + '_' + (date.getUTCMonth() + 1) + '.json';
-    console.log(fileName);
-    xhr.open('GET', fileName, true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-            const data = JSON.parse(xhr.responseText);
-            data.forEach(item => {
-                allowedMap.set(item.toLowerCase(), true);
-            });
-            console.log(allowedMap);
+async function fetchAllowedPokemonData() {
+    await chrome.storage.local.get('meta', function(items){
+        const xhr = new XMLHttpRequest();
+        const date = new Date(items['meta']);
+        const fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + date.getUTCFullYear() + '_' + (date.getUTCMonth() + 1) + '.json';
+        console.log(fileName);
+        xhr.open('GET', fileName, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                const data = JSON.parse(xhr.responseText);
+                data.forEach(item => {
+                    allowedMap.set(item.toLowerCase(), true);
+                });
+                console.log(allowedMap);
+            }
         }
-    }
-    xhr.send();
+        xhr.send();
+    })
 }
 
 // Call the function to fetch JSON data

@@ -12,4 +12,12 @@ document.addEventListener("DOMContentLoaded", function() {
     toggleElement.addEventListener('change', function() {
         chrome.storage.local.set({ 'toggleState': this.checked }, function() {});
     });
+    const dropDownElement = document.getElementById('input');
+    chrome.storage.local.get(['meta'], function(items) {
+        dropDownElement.value = items['meta'];
+       
+    });
+    dropDownElement.addEventListener('change', function() {
+        chrome.storage.local.set({ 'meta': this.value }, function() {});
+    });
 });
