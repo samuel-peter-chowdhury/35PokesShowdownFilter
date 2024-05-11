@@ -1,20 +1,30 @@
 let allowedMap = new Map();
 
 // Function to fetch JSON data
-async function fetchAllowedPokemonData() {
-    await chrome.storage.local.get('meta', function(items){
+function fetchAllowedPokemonData() {
+    chrome.storage.local.get('date', function(items){
         const xhr = new XMLHttpRequest();
-        const date = new Date(items['meta']);
-        const fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + date.getUTCFullYear() + '_' + (date.getUTCMonth() + 1) + '.json';
+        const date = new Date(items['date']);
+        const fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + date.getUTCFullYear() + '_' + (date.getUTCMonth() + 2) + '.json';
         console.log(fileName);
         xhr.open('GET', fileName, true);
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = async function() {
             if (xhr.readyState == 4) {
-                const data = JSON.parse(xhr.responseText);
-                data.forEach(item => {
-                    allowedMap.set(item.toLowerCase(), true);
-                });
-                console.log(allowedMap);
+                try{
+                    const data = JSON.parse(xhr.responseText);
+                    data.forEach(item => {
+                        allowedMap.set(item.toLowerCase(), true);
+                    });
+                    console.log(allowedMap);
+                }
+                catch (error){
+                    await chrome.storage.local.get('toggleState', async function(items){
+                        if (items['toggleState']){
+                            alert("The JSON file for this meta does not exist (yet)");
+                            await chrome.storage.local.set({'toggleState': false});
+                        }
+                    })
+                }
             }
         }
         xhr.send();
@@ -23,11 +33,8 @@ async function fetchAllowedPokemonData() {
 
 // Call the function to fetch JSON data
 fetchAllowedPokemonData();
-
 let removedElements = [];
-
 const observer = new MutationObserver(onMutation);
-
 chrome.storage.local.get(['toggleState'], function(items) {
     if (items['toggleState']) {
         observer.observe(document, {
@@ -36,6 +43,7 @@ chrome.storage.local.get(['toggleState'], function(items) {
         });
     }
 });
+
 
 function onMutation(mutations) {
     for (const { addedNodes } of mutations) {

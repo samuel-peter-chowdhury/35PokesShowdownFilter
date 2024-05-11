@@ -13,11 +13,10 @@ document.addEventListener("DOMContentLoaded", function() {
         chrome.storage.local.set({ 'toggleState': this.checked }, function() {});
     });
     const dropDownElement = document.getElementById('input');
-    chrome.storage.local.get(['meta'], function(items) {
-        dropDownElement.value = items['meta'];
-       
+    chrome.storage.local.get(['date'], function(items) {
+        dropDownElement.value = items['date'];
     });
     dropDownElement.addEventListener('change', function() {
-        chrome.storage.local.set({ 'meta': this.value }, function() {});
+        chrome.storage.local.set({ 'date': this.value }, function() {});
     });
 });
