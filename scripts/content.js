@@ -2,38 +2,41 @@ let allowedMap = new Map();
 
 // Function to fetch JSON data
 function fetchAllowedPokemonData() {
-    chrome.storage.local.get('date', function(items){
-        const xhr = new XMLHttpRequest();
-        const date = new Date(items['date']);
-        const fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + date.getUTCFullYear() + '_' + (date.getUTCMonth() + 2) + '.json';
-        console.log(fileName);
-        xhr.open('GET', fileName, true);
-        xhr.onreadystatechange = async function() {
-            if (xhr.readyState == 4) {
-                try{
-                    const data = JSON.parse(xhr.responseText);
-                    data.forEach(item => {
-                        allowedMap.set(item.toLowerCase(), true);
-                    });
-                    console.log(allowedMap);
-                }
-                catch (error){
-                    await chrome.storage.local.get('toggleState', async function(items){
-                        if (items['toggleState']){
-                            alert("The JSON file for this meta does not exist (yet)");
-                            await chrome.storage.local.set({'toggleState': false});
-                        }
-                    })
+    chrome.storage.local.get('month', function(monthItems) {
+        chrome.storage.local.get('year', function(yearItems) {
+            const xhr = new XMLHttpRequest();
+            let fileName;
+            if (monthItems['month'] && yearItems['year']) {
+                fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + yearItems['year'] + '_' + monthItems['month'] + '.json';
+            } else {
+                fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/2024_5.json';
+            }
+            console.log(fileName);
+            xhr.open('GET', fileName, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText);
+                        data.forEach(item => {
+                            allowedMap.set(item.toLowerCase(), true);
+                        });
+                        console.log(allowedMap);
+                    } else {
+                        alert('Invalid Date');
+                    }
                 }
             }
-        }
-        xhr.send();
-    })
+            xhr.send();
+        });
+    });
 }
 
 // Call the function to fetch JSON data
 fetchAllowedPokemonData();
+
 let removedElements = [];
+let addedPokemon = [];
+
 const observer = new MutationObserver(onMutation);
 chrome.storage.local.get(['toggleState'], function(items) {
     if (items['toggleState']) {
@@ -43,7 +46,6 @@ chrome.storage.local.get(['toggleState'], function(items) {
         });
     }
 });
-
 
 function onMutation(mutations) {
     for (const { addedNodes } of mutations) {
@@ -86,6 +88,10 @@ function filterPokemon(parentElement) {
     const entries = parentElement.querySelectorAll('li.result');
     entries.forEach(entry => {
         const pokemonName = entry.querySelector('a[data-entry^="pokemon|"]')?.getAttribute('data-entry')?.split('|')[1];
+        if (pokemonName && allowedMap.has(pokemonName.toLowerCase())) {
+            addedPokemon.push(pokemonName);
+            console.log(addedPokemon);
+        }
         if (pokemonName && !allowedMap.has(pokemonName.toLowerCase())) {
             entry.style.display = 'none';
             removedElements.push(entry);

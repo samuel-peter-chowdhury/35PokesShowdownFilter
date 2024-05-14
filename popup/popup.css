@@ -78,16 +78,25 @@ html {
             .slider.round:before {
                 border-radius: 50%;
             }
+            
+            .date-select-parent {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-            #input{
+            .date-select {
                 border-color: #FFD700;
                 border-width: 2px;
                 color: #FFD700;
                 font-weight: bold;
                 background-color: #8B0000;
+                width: 45%;
             }
             
-            .option{
+            .option {
                 font-weight: bold;
                 color: #FFD700;
             }
