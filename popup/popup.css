@@ -78,6 +78,19 @@ html {
             .slider.round:before {
                 border-radius: 50%;
             }
+
+            #input{
+                border-color: #FFD700;
+                border-width: 2px;
+                color: #FFD700;
+                font-weight: bold;
+                background-color: #8B0000;
+            }
+            
+            .option{
+                font-weight: bold;
+                color: #FFD700;
+            }
         }
     }
 }
