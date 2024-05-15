@@ -1,7 +1,7 @@
 # 35 Pokes Showdown Filter
 This is a Chrome Extension that will filter Pokemon Showdown so only the relevant pokemon of the month are visible
 
-## Installation
+## Installation (Firefox)
 ### To install this current version from Github, you'd need to have the developer version of Firefox installed.
 
 1. Download this repository and branch as a .zip file. **(unlike the Chromium version, DO NOT EXTRACT IT)**
