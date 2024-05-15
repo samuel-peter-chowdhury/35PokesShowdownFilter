@@ -2,8 +2,8 @@ let allowedMap = new Map();
 
 // Function to fetch JSON data
 function fetchAllowedPokemonData() {
-    chrome.storage.local.get('month', function(monthItems) {
-        chrome.storage.local.get('year', function(yearItems) {
+    browser.storage.local.get('month').then(monthItems => {
+        browser.storage.local.get('year').then(yearItems => {
             const xhr = new XMLHttpRequest();
             let fileName;
             if (monthItems['month'] && yearItems['year']) {
@@ -37,7 +37,7 @@ fetchAllowedPokemonData();
 let removedElements = [];
 
 const observer = new MutationObserver(onMutation);
-chrome.storage.local.get(['toggleState'], function(items) {
+browser.storage.local.get(['toggleState']).then(items => {
     if (items['toggleState']) {
         observer.observe(document, {
             childList: true,
