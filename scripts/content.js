@@ -35,7 +35,6 @@ function fetchAllowedPokemonData() {
 fetchAllowedPokemonData();
 
 let removedElements = [];
-let addedPokemon = [];
 
 const observer = new MutationObserver(onMutation);
 chrome.storage.local.get(['toggleState'], function(items) {
@@ -88,10 +87,6 @@ function filterPokemon(parentElement) {
     const entries = parentElement.querySelectorAll('li.result');
     entries.forEach(entry => {
         const pokemonName = entry.querySelector('a[data-entry^="pokemon|"]')?.getAttribute('data-entry')?.split('|')[1];
-        if (pokemonName && allowedMap.has(pokemonName.toLowerCase())) {
-            addedPokemon.push(pokemonName);
-            console.log(addedPokemon);
-        }
         if (pokemonName && !allowedMap.has(pokemonName.toLowerCase())) {
             entry.style.display = 'none';
             removedElements.push(entry);
