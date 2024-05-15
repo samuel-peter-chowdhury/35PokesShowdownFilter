@@ -16,7 +16,7 @@ This is a Chrome Extension that will filter Pokemon Showdown so only the relevan
 
 
 ## Installation (Firefox)
-### To install this current version from Github, you'd need to have the developer version of Firefox installed.
+### To install this current version from Github, you'd need to have the ![developer version of Firefox](https://www.mozilla.org/en-US/firefox/developer) installed.
 
 1. Download this repository and branch as a .zip file. **(unlike the Chromium version, DO NOT EXTRACT IT)**
 2. Install the **developer version** of Firefox
