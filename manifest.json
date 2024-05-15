@@ -2,27 +2,32 @@
     "manifest_version": 3,
     "name": "35 Pokes Showdown Filter",
     "description": "This extension allows 35 Pokes users to filter the showdown teambuilder in order to only display the 35 current pokemon.",
-    "version": "1.0",
+    "version": "1.1",
     "icons": {
-      "16": "images/35_logo.PNG",
-      "32": "images/35_logo.PNG",
-      "48": "images/35_logo.PNG",
-      "128": "images/35_logo.PNG"
+        "16": "images/35_logo.PNG",
+        "32": "images/35_logo.PNG",
+        "48": "images/35_logo.PNG",
+        "128": "images/35_logo.PNG"
     },
     "action": {
-      "default_popup": "popup/popup.html"
+        "default_popup": "popup/popup.html"
     },
     "content_scripts": [
-      {
-        "js": ["scripts/content.js"],
-        "matches": ["https://play.pokemonshowdown.com/*"]
-      }
+        {
+            "js": ["scripts/content.js"],
+            "matches": ["https://play.pokemonshowdown.com/*"]
+        }
     ],
     "permissions": [
-      "storage"
+        "storage"
     ],
     "host_permissions": [
-      "http://*/",
-      "https://*/"
-    ]
+        "https://samuel-peter-chowdhury.github.io/*"
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "35pokes@gmail.com",
+            "strict_min_version": "109.0"
+        }
+    }
 }
