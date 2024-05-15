@@ -1,5 +1,10 @@
 let allowedMap = new Map();
 
+// Polyfill for browser compatibility
+if (typeof browser === 'undefined') {
+    var browser = chrome;
+}
+
 // Function to fetch JSON data
 function fetchAllowedPokemonData() {
     browser.storage.local.get('month').then(monthItems => {
