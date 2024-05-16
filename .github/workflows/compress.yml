@@ -13,4 +13,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: result
-          path: result.zip
+          path: ${{ github.workspace }}/result.zip
