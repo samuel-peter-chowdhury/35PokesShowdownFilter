@@ -10,3 +10,6 @@ jobs:
         with:
           files: manifest.json
           dest: result.zip
+      - uses: actions/upload-artifact@v2
+        with:
+          name: result.zip
