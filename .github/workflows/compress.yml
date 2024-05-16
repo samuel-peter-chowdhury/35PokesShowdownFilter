@@ -11,7 +11,7 @@ jobs:
           files: manifest.json background.js dates/ images/ popup/ scripts/
           recursive: false
           dest: release.zip
-      #- uses: actions/upload-artifact@v4
-        #with:
-          #name: release
-          #path: ${{ github.workspace }}/release.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: ${{ github.workspace }}/release.zip
