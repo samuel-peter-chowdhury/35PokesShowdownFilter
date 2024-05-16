@@ -1,7 +1,0 @@
-{
-    "require": {
-        "actions/checkout": "1",
-        "montudor/action-zip": "1",
-        "actions/upload-artifact": "2"
-    }
-}
