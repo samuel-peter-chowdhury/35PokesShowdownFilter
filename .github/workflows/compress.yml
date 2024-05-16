@@ -5,11 +5,6 @@ jobs:
   Compress:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - run: composer install --ansi --no-progress --no-interaction --prefer-dist
       - uses: montudor/action-zip@v1
         with:
           args: zip -qq -r release.zip 35PokesShowdownFilter
-      - uses: actions/upload-artifact@v2
-        with:
-          name: release.zip
