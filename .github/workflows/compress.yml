@@ -9,6 +9,7 @@ jobs:
       - uses: vimtor/action-zip@v1.2
         with:
           files: manifest.json background.js dates/ images/ popup/ scripts/
+          recursive: false
           dest: release.zip
       - uses: actions/upload-artifact@v4
         with:
