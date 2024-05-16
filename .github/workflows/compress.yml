@@ -8,9 +8,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: vimtor/action-zip@v1.2
         with:
-          files: manifest.json
-          dest: result.zip
+          files: manifest.json background.js dates/ images/ popup/ scripts/
+          dest: release.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: result
-          path: ${{ github.workspace }}/result.zip
+          name: release
+          path: ${{ github.workspace }}/release.zip
