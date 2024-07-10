@@ -100,6 +100,52 @@ html {
                 font-weight: bold;
                 color: #FFD700;
             }
+
+            .input-parent {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .input-field {
+                border-color: #FFD700;
+                border-width: 2px;
+                border-style: solid;
+                color: #FFD700;
+                font-weight: bold;
+                background-color: #8B0000;
+                width: 45%;
+            }
+
+            .button-container {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .copy-button {
+                border-color: #FFD700;
+                border-width: 2px;
+                border-style: solid;
+                color: #FFD700;
+                font-weight: bold;
+                background-color: #8B0000;
+                cursor: pointer;
+                width: 100%;
+
+                &:hover {
+                    border-color: #BFA100;
+                    background-color: #680000;
+                }
+
+                i {
+                    margin-left: 5px;
+                }
+            }
         }
     }
 }

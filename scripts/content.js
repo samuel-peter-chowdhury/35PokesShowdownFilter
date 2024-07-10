@@ -1,37 +1,47 @@
 let allowedMap = new Map();
+const challengeCodePrefix = '/challenge gen9nationaldexag @@@ Z-Move Clause, -Mega, Terastal Clause, Sleep Clause Mod, Forme Clause, -Hidden Power, -Last Respects, -Kings Rock, -Shadow Tag, -Acupressure, -Battle Bond, -Quick Claw, -Razor Fang, Evasion Clause, OHKO Clause, baton pass stat trap clause, -All Pokemon, +';
 
 // Polyfill for browser compatibility
 if (typeof browser === 'undefined') {
     var browser = chrome;
 }
 
+function getChallengeCode() {
+    const pokemonList = Array.from(allowedMap.keys()).join(', +');
+    return challengeCodePrefix + pokemonList;
+}
+
 // Function to fetch JSON data
 function fetchAllowedPokemonData() {
-    browser.storage.local.get('month').then(monthItems => {
-        browser.storage.local.get('year').then(yearItems => {
-            const xhr = new XMLHttpRequest();
-            let fileName;
-            if (monthItems['month'] && yearItems['year']) {
-                fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + yearItems['year'] + '_' + monthItems['month'] + '.json';
-            } else {
-                fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/2024_5.json';
-            }
-            console.log(fileName);
-            xhr.open('GET', fileName, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    if (xhr.status === 200) {
-                        const data = JSON.parse(xhr.responseText);
-                        data.forEach(item => {
-                            allowedMap.set(item.toLowerCase(), true);
-                        });
-                        console.log(allowedMap);
-                    } else {
-                        alert('Invalid Date');
+    browser.storage.local.get('35pokes-month').then(monthItems => {
+        browser.storage.local.get('35pokes-year').then(yearItems => {
+            browser.storage.local.get('35pokes-text').then(textItems => {
+                const xhr = new XMLHttpRequest();
+                let fileName;
+                if (monthItems['35pokes-month'] && yearItems['35pokes-year']) {
+                    textSuffix = textItems['35pokes-text'] ? '_' + textItems['35pokes-text'] : '';
+                    fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/' + yearItems['35pokes-year'] + '_' + monthItems['35pokes-month'] + textSuffix + '.json';
+                } else {
+                    fileName = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/2024_5.json';
+                }
+                console.log(fileName);
+                xhr.open('GET', fileName, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status === 200) {
+                            const data = JSON.parse(xhr.responseText);
+                            data.forEach(item => {
+                                allowedMap.set(item.toLowerCase(), true);
+                            });
+                            browser.storage.local.set({ '35pokes-code': getChallengeCode() }, function() {});
+                            console.log(allowedMap);
+                        } else {
+                            alert('Invalid Date');
+                        }
                     }
                 }
-            }
-            xhr.send();
+                xhr.send();
+            });
         });
     });
 }
@@ -42,8 +52,8 @@ fetchAllowedPokemonData();
 let removedElements = [];
 
 const observer = new MutationObserver(onMutation);
-browser.storage.local.get(['toggleState']).then(items => {
-    if (items['toggleState']) {
+browser.storage.local.get(['35pokes-toggleState']).then(items => {
+    if (items['35pokes-toggleState']) {
         observer.observe(document, {
             childList: true,
             subtree: true,
