@@ -87,7 +87,12 @@ function onMutation(mutations) {
 function filterChart(chart) {
     if (chart) {
         console.log('Filtering Chart...');
-        chart.scrollTop = chart.scrollHeight;
+
+        // Mobile support
+        let morebtn = document.getElementsByClassName('result more');
+        if(!morebtn.length) chart.scrollTop = chart.scrollHeight;
+        while(morebtn.length) morebtn[0].firstChild.firstChild.click();
+
         setTimeout(function() {
             chart.scrollTop = 0;
             removedElements = [];
