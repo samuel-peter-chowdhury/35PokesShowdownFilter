@@ -4,8 +4,8 @@ This is a Chrome Extension that will filter Pokemon Showdown so only the relevan
 ## Installation (Chromium, e.g. Edge, Chrome, Brave)
 
 1. Download this repository as a zip
-2. extract it
-3. open your **Chromium** based browser of choice
+2. Extract it
+3. Open your **Chromium** based browser of choice
 4. Type in your search bar: `chrome://extensions`
 5. Turn on developer mode
    * [Chrome](https://support.google.com/chrome/thread/155712634?hl=en&msgid=157192351)
@@ -19,13 +19,14 @@ This is a Chrome Extension that will filter Pokemon Showdown so only the relevan
 ### To install this current version from Github, you'd need to have the [developer version of Firefox](https://www.mozilla.org/en-US/firefox/developer) installed.
 
 1. Download this repository and branch as a .zip file. **(unlike the Chromium version, DO NOT EXTRACT IT)**
-2. Install the **developer version** of Firefox
-3. open the **developer version** of Firefox
-4. type in your adress bar `about:config` and click Enter
-5. type in the search bar `xpinstall.signatures.required` And toggle it from `True` to `False`
-6. Go to `about:addons` on your search bar
-7. click on the gear wheel and select `install Addon from File`
-8. Select the downloaded zip file and select `Open`
+2. In the root of the zip file is one folder; move all of its contents to the root of the zip file.
+3. Install the **developer version** of Firefox
+4. open the **developer version** of Firefox
+5. type in your adress bar `about:config` and click Enter
+6. type in the search bar `xpinstall.signatures.required` And toggle it from `True` to `False`
+7. Go to `about:addons` on your search bar
+8. click on the gear wheel and select `install Addon from File`
+9. Select the downloaded zip file and select `Open`
 
 
 ## Developers
