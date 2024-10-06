@@ -117,7 +117,7 @@ function filterEntries(parentElement, chartType) {
         }
     });
     // Don't filter out hidden power for old gens.
-    else if(chartType === "Moves") if(!/RBY|GSC|ADV|BW|ORAS|SM/.test(metaText)) entries.forEach(entry => {
+    else if(chartType === "Moves") if(!/^(RBY|GSC|ADV|BW|ORAS|SM)$/.test(metaText)) entries.forEach(entry => {
         const moveName = entry.querySelector('a[data-entry^="move|"]')?.getAttribute('data-entry')?.split('|')[1];
         if(moveName && /Hidden Power/.test(moveName)) {
             entry.style.display = 'none';
