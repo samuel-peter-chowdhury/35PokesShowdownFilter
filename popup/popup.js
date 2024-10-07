@@ -1,7 +1,7 @@
 // Polyfill for browser compatibility
 if (typeof browser === "undefined") globalThis.browser = chrome;
 
-const months = new Map([[1, 'jan'], [2, 'feb'], [3, 'mar'], [4, 'apr'], [5, 'may'], [6, 'jun'], [7, 'jul'], [8, 'aug'], [9, 'sep'], [10, 'oct'], [11, 'nov'], [12, 'dec']]);
+const months = new Map([['jan', 1], ['feb', 2], ['mar', 3], ['apr', 4], ['may', 5], ['jun', 6], ['jul', 7], ['aug', 8], ['sep', 9], ['oct', 10], ['nov', 11], ['dec', 12]]);
 const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
 const currentDate = new Date();
 
@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const monthElement = document.getElementById('month-select');
     months.forEach((value, key) => {
         let opt = document.createElement('option');
-        opt.value = key;
-        opt.innerHTML = value;
+        opt.value = value;
+        opt.innerHTML = key;
         monthElement.appendChild(opt);
     });
     browser.storage.local.get(['35pokes-month']).then(items => {
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const buttonElement = document.getElementById('code-button');
     buttonElement.addEventListener('click', function() {
-        let challengeCodePrefix = '/challenge gen9nationaldexag @@@ Z-Move Clause, -Mega, Terastal Clause, Sleep Clause Mod, Forme Clause, -Hidden Power, -Last Respects, -Kings Rock, -Shadow Tag, -Acupressure, -Battle Bond, -Quick Claw, -Razor Fang, Evasion Clause, OHKO Clause, baton pass stat trap clause, -All Pokemon, +';
+        const challengeCodePrefix = '/challenge gen9nationaldexag @@@ Z-Move Clause, -Mega, Terastal Clause, Sleep Clause Mod, Forme Clause, -Hidden Power, -Last Respects, -Kings Rock, -Shadow Tag, -Acupressure, -Battle Bond, -Quick Claw, -Razor Fang, Evasion Clause, OHKO Clause, baton pass stat trap clause, -All Pokemon, +';
         browser.storage.local.get('35pokes-list').then(items => {
             if(items['35pokes-list']) navigator.clipboard.writeText(challengeCodePrefix + items['35pokes-list'].join(', +')).then(() => showMessage('Copied!'));
             else showMessage("This meta doesn't exist yet!");
@@ -105,12 +105,14 @@ document.addEventListener("DOMContentLoaded", function() {
         text.className = "message-text";
         text.innerHTML = msg;
         text.style.opacity = 1;
+        messageContainer.style.display = "flex";
         messageContainer.appendChild(text);
         setTimeout(() => {
             let fadeout = setInterval(() => {
                 text.style.opacity -= 0.1;
                 if(text.style.opacity == 0) {
                     messageContainer.removeChild(text);
+                    if(messageContainer.childElementCount === 0) messageContainer.style.display = "none";
                     clearInterval(fadeout);
                 }
             }, 100);
