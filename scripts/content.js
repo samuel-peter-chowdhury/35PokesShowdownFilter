@@ -1,9 +1,9 @@
 // Polyfill for browser compatibility
 if (typeof browser === "undefined") globalThis.browser = chrome;
 
-let metaMonth, metaYear, metaText;
-let allowedMap = new Map();
-let removedElements = [];
+let metaText;
+const allowedMap = new Map();
+const removedElements = [];
 const observer = new MutationObserver(onMutation);
 
 // Receive settings as the user changes them.
@@ -21,8 +21,6 @@ browser.runtime.onMessage.addListener((message) => {
     // Selected meta changed
     allowedMap.clear();
     if(message.list) message.list.forEach(item => allowedMap.set(item.toLowerCase()));
-    metaMonth = message.month;
-    metaYear = message.year;
     metaText = message.text;
 });
 
@@ -30,13 +28,9 @@ browser.runtime.onMessage.addListener((message) => {
 browser.storage.local.get({
     '35pokes-toggleState': false,
     '35pokes-list': [],
-    '35pokes-month': 5,
-    '35pokes-year': 2024,
     '35pokes-text': ''
 }).then(data => {
     data['35pokes-list'].forEach(item => allowedMap.set(item.toLowerCase()));
-    metaMonth = data['35pokes-month'];
-    metaYear = data['35pokes-year'];
     metaText = data['35pokes-text'];
     if(data['35pokes-toggleState']) observer.observe(document, {
         childList: true,
@@ -50,12 +44,6 @@ function onMutation(mutations) {
     for (const { addedNodes } of mutations) {
         for (const node of addedNodes) {
             if(!node.tagName) continue;
-
-            const setchart = node.getElementsByClassName('setchart')[0];
-            if(setchart?.childElementCount === 1) {
-                displayMeta(setchart);
-                continue;
-            }
             const elements = node.getElementsByClassName('teambuilder-results')[0];
             if(elements) {
                 console.log('35Pokes Filtering Chart... (teambuilder-results)');
@@ -85,7 +73,7 @@ function filterChart(chart) {
 
     setTimeout(function() {
         chart.scrollTop = 0;
-        removedElements = [];
+        removedElements.length = 0;
 
         let chartType = filterHeaders(chart);
         filterEntries(chart, chartType);
@@ -131,15 +119,4 @@ function unsetHeight(parentElement) {
     if (childElement) {
         childElement.style = null;
     }
-}
-
-function displayMeta(chart) {
-    let insert = document.createElement("div");
-    insert.style.float = "right";
-    insert.style.textAlign = "right";
-    insert.style.marginTop = "1%";
-    insert.style.marginRight = "1%";
-    insert.style.color = "#ddd";
-    insert.innerHTML = "35Pokes Filter:<br>" + metaMonth + " " + metaYear + " " + metaText;
-    chart.appendChild(insert);
 }

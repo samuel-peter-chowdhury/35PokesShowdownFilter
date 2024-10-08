@@ -1,7 +1,7 @@
 // Polyfill for browser compatibility
 if (typeof browser === "undefined") globalThis.browser = chrome;
 
-const months = new Map([['jan', 1], ['feb', 2], ['mar', 3], ['apr', 4], ['may', 5], ['jun', 6], ['jul', 7], ['aug', 8], ['sep', 9], ['oct', 10], ['nov', 11], ['dec', 12]]);
+const months = new Map([[1, 'jan'], [2, 'feb'], [3, 'mar'], [4, 'apr'], [5, 'may'], [6, 'jun'], [7, 'jul'], [8, 'aug'], [9, 'sep'], [10, 'oct'], [11, 'nov'], [12, 'dec']]);
 const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
 const currentDate = new Date();
 
@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Month Input
     const monthElement = document.getElementById('month-select');
     months.forEach((value, key) => {
-        let opt = document.createElement('option');
-        opt.value = value;
-        opt.innerHTML = key;
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.innerHTML = value;
         monthElement.appendChild(opt);
     });
     browser.storage.local.get(['35pokes-month']).then(items => {
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Year Input
     const yearElement = document.getElementById('year-select');
     years.forEach(y => {
-        let opt = document.createElement('option');
+        const opt = document.createElement('option');
         opt.value = y;
         opt.innerHTML = y;
         yearElement.appendChild(opt);
@@ -92,9 +92,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function onPopupActivity(result) {
-        let textPrefix = result.list ? "Meta set to:<br>" : "Meta not found:<br>";
-        let textSuffix = result.text ? " " + result.text : "";
-        showMessage(textPrefix + result.month + " " + result.year + textSuffix);
+        const textPrefix = result.list ? "Date set:<br>" : "Meta not found:<br>";
+        const textSuffix = result.text ? " " + result.text : "";
+        showMessage(textPrefix + months.get(result.month) + " " + result.year + textSuffix);
         messageTabs(result);
     }
 
@@ -122,17 +122,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
 async function fetchAllowedPokemonDataAndSetStorage() {
     // Default metagame in case the storage gets wiped.
-    let storageItems = await browser.storage.local.get({
+    const storageItems = await browser.storage.local.get({
         '35pokes-month': 5,
         '35pokes-year': 2024,
         '35pokes-text': ''
     });
-    let textPrefix = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/';
-    let textSuffix = storageItems['35pokes-text'] ? '_' + storageItems['35pokes-text'] : '';
-    let fileName = textPrefix + storageItems['35pokes-year'] + '_' + storageItems['35pokes-month'] + textSuffix + '.json';
+    const textPrefix = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/';
+    const textSuffix = storageItems['35pokes-text'] ? '_' + storageItems['35pokes-text'] : '';
+    const fileName = textPrefix + storageItems['35pokes-year'] + '_' + storageItems['35pokes-month'] + textSuffix + '.json';
 
     let allowedMons = "";
-    let response = await fetch(fileName);
+    const response = await fetch(fileName);
     if(response.ok) allowedMons = await response.json();
     browser.storage.local.set({ '35pokes-list': allowedMons });
     return {
