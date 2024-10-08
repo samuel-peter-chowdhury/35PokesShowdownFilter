@@ -161,10 +161,14 @@ html {
                 display: none;
                 flex-direction: column;
                 color: #FFD700;
-                font-size: 16px;
 
                 .message-text:not(:first-child) {
                     margin-top: 16px;
+                }
+
+                .message-text {
+                    font-size: 12px;
+                    font-weight: bold;
                 }
             }
         }
