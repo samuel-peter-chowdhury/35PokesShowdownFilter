@@ -10,8 +10,6 @@ const KEY_MONTH = "35pokes-month";
 const KEY_YEAR = "35pokes-year";
 const KEY_TEXT = "35pokes-text";
 const KEY_LIST = "35pokes-list";
-// Keys to be deleted from storage for 1.4:
-// "35pokes-code"
 
 document.addEventListener("DOMContentLoaded", function() {
     const messageContainer = document.getElementById('message-container');
@@ -29,8 +27,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     toggleElement.addEventListener('change', function() {
         browser.storage.local.set({ [KEY_TOGGLESTATE]: this.checked });
-        messageTabs({ toggleSet: this.checked });
-        fetchAllowedPokemonDataAndSetStorage().then(onPopupActivity); // remove this for 1.4
     });
 
     // Month Input
@@ -46,12 +42,12 @@ document.addEventListener("DOMContentLoaded", function() {
             monthElement.value = items[KEY_MONTH];
         } else {
             monthElement.value = currentDate.getUTCMonth() + 1;
-            browser.storage.local.set({ [KEY_MONTH]: currentDate.getUTCMonth() + 1 });
+            browser.storage.local.set({ [KEY_MONTH]: currentDate.getUTCMonth() + 1 }).then(fetchAllowedPokemonDataAndSetStorage);
         }
     });
     monthElement.addEventListener('change', function() {
         browser.storage.local.set({ [KEY_MONTH]: Number(this.value) });
-        fetchAllowedPokemonDataAndSetStorage().then(onPopupActivity);
+        fetchAllowedPokemonDataAndSetStorage().then(showMessage);
     });
 
     // Year Input
@@ -67,12 +63,12 @@ document.addEventListener("DOMContentLoaded", function() {
             yearElement.value = items[KEY_YEAR];
         } else {
             yearElement.value = currentDate.getUTCFullYear();
-            browser.storage.local.set({ [KEY_YEAR]: currentDate.getUTCFullYear() });
+            browser.storage.local.set({ [KEY_YEAR]: currentDate.getUTCFullYear() }).then(fetchAllowedPokemonDataAndSetStorage);
         }
     });
     yearElement.addEventListener('change', function() {
         browser.storage.local.set({ [KEY_YEAR]: Number(this.value) });
-        fetchAllowedPokemonDataAndSetStorage().then(onPopupActivity);
+        fetchAllowedPokemonDataAndSetStorage().then(showMessage);
     });
 
     // Text Input
@@ -80,14 +76,11 @@ document.addEventListener("DOMContentLoaded", function() {
     browser.storage.local.get(KEY_TEXT).then(items => {
         if (items[KEY_TEXT]) {
             textElement.value = items[KEY_TEXT];
-        } else {
-            textElement.value = '';
-            browser.storage.local.set({ [KEY_TEXT]: '' });
         }
     });
     textElement.addEventListener('change', function() {
         browser.storage.local.set({ [KEY_TEXT]: this.value });
-        fetchAllowedPokemonDataAndSetStorage().then(onPopupActivity);
+        fetchAllowedPokemonDataAndSetStorage().then(showMessage);
     });
 
     const buttonElement = document.getElementById('code-button');
@@ -98,13 +91,6 @@ document.addEventListener("DOMContentLoaded", function() {
             else showMessage("This meta doesn't exist yet!");
         });
     });
-
-    function onPopupActivity(result) {
-        const textPrefix = result.list ? "Date set: " : "Meta not found: ";
-        const textSuffix = result.text ? " " + result.text : "";
-        showMessage(textPrefix + months.get(result.month) + " " + result.year + textSuffix);
-        messageTabs(result);
-    }
 
     // This replaces alert() because alert breaks clipboard functionality on every browser.
     // also alert in popup is unreadable for firefox users.
@@ -128,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+// TODO: any ideas for a shorter name here?
 async function fetchAllowedPokemonDataAndSetStorage() {
     // Default metagame in case the storage gets wiped.
     const storageItems = await browser.storage.local.get({
@@ -135,29 +122,17 @@ async function fetchAllowedPokemonDataAndSetStorage() {
         [KEY_YEAR]: 2024,
         [KEY_TEXT]: ''
     });
-    const textPrefix = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/';
-    const textSuffix = storageItems[KEY_TEXT] ? '_' + storageItems[KEY_TEXT] : '';
-    const fileName = textPrefix + storageItems[KEY_YEAR] + '_' + storageItems[KEY_MONTH] + textSuffix + '.json';
+    const urlPrefix = 'https://samuel-peter-chowdhury.github.io/35PokesShowdownFilter/dates/';
+    const urlSuffix = storageItems[KEY_TEXT] ? '_' + storageItems[KEY_TEXT] : '';
+    const url = urlPrefix + storageItems[KEY_YEAR] + '_' + storageItems[KEY_MONTH] + urlSuffix + '.json';
 
     let allowedMons = "";
-    const response = await fetch(fileName);
+    const response = await fetch(url);
     if(response.ok) allowedMons = await response.json();
     browser.storage.local.set({ [KEY_LIST]: allowedMons });
-    return {
-        month: storageItems[KEY_MONTH],
-        year: storageItems[KEY_YEAR],
-        text: storageItems[KEY_LIST],
-        list: allowedMons
-    };
-}
 
-function messageTabs(data) {
-    browser.tabs.query({
-        url: "https://play.pokemonshowdown.com/*",
-        discarded: false
-    }).then(psTabs => {
-        psTabs.forEach(tab => {
-            browser.tabs.sendMessage(tab.id, data);
-        });
-    });
+    const msgPrefix = allowedMons ? "Date set: " : "Meta not found: ";
+    const msgSuffix = storageItems[KEY_TEXT] ? " " + storageItems[KEY_TEXT] : "";
+    const msg = msgPrefix + months.get(storageItems[KEY_MONTH]) + " " + storageItems[KEY_YEAR] + msgSuffix;
+    return msg;
 }

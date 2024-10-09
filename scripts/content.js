@@ -1,38 +1,59 @@
 // Polyfill for browser compatibility
 if (typeof browser === "undefined") globalThis.browser = chrome;
 
-let metaText;
+let metaText = '';
 const allowedMap = new Map();
 const removedElements = [];
 const observer = new MutationObserver(onMutation);
 
+const KEY_TOGGLESTATE = "35pokes-toggleState";
+const KEY_TEXT = "35pokes-text";
+const KEY_LIST = "35pokes-list";
+const KEY_MONTH = "35pokes-month";
+
 // Receive settings as the user changes them.
-browser.runtime.onMessage.addListener((message) => {
-    // Toggle state changed
-    if(typeof(message.toggleSet) === "boolean") {
-        if(message.toggleSet) observer.observe(document, {
+browser.storage.local.onChanged.addListener(items => {
+    console.log(items);
+    if(items[KEY_LIST]) {
+        console.log(1);
+        allowedMap.clear();
+        if(items[KEY_LIST].newValue) items[KEY_LIST].newValue.forEach(item => allowedMap.set(item.toLowerCase()));
+    }
+    else if(items[KEY_TOGGLESTATE]) {
+        console.log(2);
+        if(items[KEY_TOGGLESTATE].newValue) observer.observe(document, {
             childList: true,
             subtree: true,
         });
         else observer.disconnect();
-        return;
     }
-
-    // Selected meta changed
-    allowedMap.clear();
-    if(message.list) message.list.forEach(item => allowedMap.set(item.toLowerCase()));
-    metaText = message.text;
+    else if(items[KEY_TEXT]) {
+        console.log(3);
+        metaText = items[KEY_TEXT].newValue;
+    }
 });
 
 // Receive settings on load from last time if present, otherwise load defaults.
 browser.storage.local.get({
-    '35pokes-toggleState': false,
-    '35pokes-list': [],
-    '35pokes-text': ''
+    [KEY_TOGGLESTATE]: false,
+    [KEY_TEXT]: '',
+    [KEY_LIST]: '',
+    [KEY_MONTH]: ''
 }).then(data => {
-    data['35pokes-list'].forEach(item => allowedMap.set(item.toLowerCase()));
-    metaText = data['35pokes-text'];
-    if(data['35pokes-toggleState']) observer.observe(document, {
+    if(data[KEY_TEXT]) metaText = data[KEY_TEXT];
+    if(data[KEY_LIST]) data[KEY_LIST].forEach(item => allowedMap.set(item.toLowerCase()));
+    else if(data[KEY_MONTH]) {
+        console.log("35Pokes Filter handling update to version 1.3");
+        // make the user open popup which populates KEY_LIST
+        browser.storage.local.set({
+            [KEY_MONTH]: '',
+            [KEY_TOGGLESTATE]: false
+        });
+        // might as well do this now, save a few lines in service worker later
+        browser.storage.local.remove("35pokes-code");
+        return;
+    }
+    if(data[KEY_TOGGLESTATE]) observer.observe(document, {
         childList: true,
         subtree: true,
     });

@@ -22,7 +22,6 @@
         "storage"
     ],
     "host_permissions": [
-        "https://play.pokemonshowdown.com/*",
         "https://samuel-peter-chowdhury.github.io/*"
     ],
     "browser_specific_settings": {
