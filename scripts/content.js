@@ -13,14 +13,11 @@ const KEY_MONTH = "35pokes-month";
 
 // Receive settings as the user changes them.
 browser.storage.local.onChanged.addListener(items => {
-    console.log(items);
     if(items[KEY_LIST]) {
-        console.log(1);
         allowedMap.clear();
         if(items[KEY_LIST].newValue) items[KEY_LIST].newValue.forEach(item => allowedMap.set(item.toLowerCase()));
     }
     else if(items[KEY_TOGGLESTATE]) {
-        console.log(2);
         if(items[KEY_TOGGLESTATE].newValue) observer.observe(document, {
             childList: true,
             subtree: true,
@@ -28,7 +25,6 @@ browser.storage.local.onChanged.addListener(items => {
         else observer.disconnect();
     }
     else if(items[KEY_TEXT]) {
-        console.log(3);
         metaText = items[KEY_TEXT].newValue;
     }
 });
@@ -43,7 +39,6 @@ browser.storage.local.get({
     if(data[KEY_TEXT]) metaText = data[KEY_TEXT];
     if(data[KEY_LIST]) data[KEY_LIST].forEach(item => allowedMap.set(item.toLowerCase()));
     else if(data[KEY_MONTH]) {
-        console.log("35Pokes Filter handling update to version 1.3");
         // make the user open popup which populates KEY_LIST
         browser.storage.local.set({
             [KEY_MONTH]: '',
@@ -67,13 +62,11 @@ function onMutation(mutations) {
             if(!node.tagName) continue;
             const elements = node.getElementsByClassName('teambuilder-results')[0];
             if(elements) {
-                console.log('35Pokes Filtering Chart... (teambuilder-results)');
                 filterChart(elements);
                 return;
             }
             const results = node.getElementsByClassName('result')[0];
             if(results) {
-                console.log('35Pokes Filtering Chart... (result)');
                 filterChart(results.parentElement.parentElement);
                 return;
             }
