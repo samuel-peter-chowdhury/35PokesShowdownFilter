@@ -1,10 +1,12 @@
 html {
     padding: 0;
     margin: 0;
+    height: fit-content;
 
     body {
         padding: 0;
         margin: 0;
+        height: fit-content;
     
         .popup-container {
             display: flex;
@@ -144,6 +146,29 @@ html {
 
                 i {
                     margin-left: 5px;
+                }
+            }
+
+            .footer-parent {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .message-container {
+                display: none;
+                flex-direction: column;
+                color: #FFD700;
+
+                .message-text:not(:first-child) {
+                    margin-top: 16px;
+                }
+
+                .message-text {
+                    font-size: 12px;
+                    font-weight: bold;
                 }
             }
         }
